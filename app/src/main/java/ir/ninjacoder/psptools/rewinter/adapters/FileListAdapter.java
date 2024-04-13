@@ -8,15 +8,18 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
 import ir.ninjacoder.psptools.rewinter.databinding.FilelistBinding;
+import ir.ninjacoder.psptools.rewinter.interfaces.OnItemClick;
 import java.io.File;
 import java.util.List;
 
 public class FileListAdapter extends RecyclerView.Adapter<FileListAdapter.Holder> {
   private List<File> listFile;
   protected FilelistBinding bi;
+  protected OnItemClick click;
 
-  public FileListAdapter(List<File> listFile) {
+  public FileListAdapter(List<File> listFile, OnItemClick click) {
     this.listFile = listFile;
+    this.click = click;
   }
 
   @Override
@@ -33,7 +36,7 @@ public class FileListAdapter extends RecyclerView.Adapter<FileListAdapter.Holder
       holder.icon.setImageResource(R.drawable.ic_launcher_foreground);
     }
     holder.name.setText(files.getName());
-    
+    holder.itemView.setOnClickListener(x -> click.onClick(files,holder.getAdapterPosition(),x));
   }
 
   @Override
