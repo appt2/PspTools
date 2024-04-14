@@ -1,50 +1,35 @@
 {
   "allFiles": [
     {
-      "file": "/storage/emulated/0/AndroidIDEProjects/Psp tools/app/src/main/java/ir/ninjacoder/psptools/rewinter/MainActivity.java",
-      "selection": {
-        "end": {
-          "column": 20,
-          "index": 1572,
-          "line": 47
-        },
-        "start": {
-          "column": 7,
-          "index": 1559,
-          "line": 47
-        }
-      }
-    },
-    {
-      "file": "/storage/emulated/0/AndroidIDEProjects/Psp tools/app/src/main/java/ir/ninjacoder/psptools/rewinter/interfaces/OnItemClick.java",
-      "selection": {
-        "end": {
-          "column": 0,
-          "index": 0,
-          "line": 0
-        },
-        "start": {
-          "column": 0,
-          "index": 0,
-          "line": 0
-        }
-      }
-    },
-    {
       "file": "/storage/emulated/0/AndroidIDEProjects/Psp tools/app/src/main/java/ir/ninjacoder/psptools/rewinter/adapters/FileListAdapter.java",
       "selection": {
         "end": {
-          "column": 11,
-          "index": 1351,
-          "line": 41
+          "column": 62,
+          "index": 1272,
+          "line": 37
         },
         "start": {
-          "column": 11,
-          "index": 1351,
-          "line": 41
+          "column": 62,
+          "index": 1272,
+          "line": 37
+        }
+      }
+    },
+    {
+      "file": "/storage/emulated/0/AndroidIDEProjects/Psp tools/materialfileicon/src/main/java/com/bluewhaleyt/materialfileicon/core/FileIconHelper.java",
+      "selection": {
+        "end": {
+          "column": 0,
+          "index": 0,
+          "line": 0
+        },
+        "start": {
+          "column": 0,
+          "index": 0,
+          "line": 0
         }
       }
     }
   ],
-  "selectedFile": "/storage/emulated/0/AndroidIDEProjects/Psp tools/app/src/main/java/ir/ninjacoder/psptools/rewinter/MainActivity.java"
+  "selectedFile": "/storage/emulated/0/AndroidIDEProjects/Psp tools/materialfileicon/src/main/java/com/bluewhaleyt/materialfileicon/core/FileIconHelper.java"
 }

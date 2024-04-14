@@ -2,6 +2,8 @@ package ir.ninjacoder.psptools.rewinter.adapters;
 
 import android.view.LayoutInflater;
 import android.view.View;
+import com.bluewhaleyt.materialfileicon.core.FileIconHelper;
+import com.bumptech.glide.Glide;
 import ir.ninjacoder.psptools.rewinter.R;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -10,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import ir.ninjacoder.psptools.rewinter.databinding.FilelistBinding;
 import ir.ninjacoder.psptools.rewinter.interfaces.OnItemClick;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 public class FileListAdapter extends RecyclerView.Adapter<FileListAdapter.Holder> {
@@ -32,11 +35,20 @@ public class FileListAdapter extends RecyclerView.Adapter<FileListAdapter.Holder
   @Override
   public void onBindViewHolder(Holder holder, int pos) {
     File files = listFile.get(pos);
-    if (files.isDirectory()) {
-      holder.icon.setImageResource(R.drawable.ic_launcher_foreground);
+    FileIconHelper helper = new FileIconHelper(files.getPath());
+    helper.setFilePath(files.getPath());
+    helper.setDynamicFolderEnabled(true);
+    helper.setEnvironmentEnabled(true);
+    holder.icon.setImageResource(helper.getFileIcon());
+
+    if (getEnd(files)) {
+      Glide.with(holder.icon.getContext())
+          .load(files)
+          .placeholder(R.drawable.ic_launcher_foreground)
+          .into(holder.icon);
     }
     holder.name.setText(files.getName());
-    holder.itemView.setOnClickListener(x -> click.onClick(files,holder.getAdapterPosition(),x));
+    holder.itemView.setOnClickListener(x -> click.onClick(files, holder.getAdapterPosition(), x));
   }
 
   @Override
@@ -55,5 +67,10 @@ public class FileListAdapter extends RecyclerView.Adapter<FileListAdapter.Holder
       name = view.name;
       sub = view.sub;
     }
+  }
+
+  public boolean getEnd(File fo) {
+    var name = fo.getName();
+    return name.endsWith(".jpg".toLowerCase()) || name.endsWith(".png".toLowerCase());
   }
 }

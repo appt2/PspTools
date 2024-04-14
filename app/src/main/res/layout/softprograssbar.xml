@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_height="wrap_content"
+    android:layout_width="match_parent"
+    android:gravity="center_vertical"
+    android:padding="9dp"
+    android:orientation="horizontal"
+    android:id="@+id/helper"
+    >
+
+    <com.google.android.material.progressindicator.CircularProgressIndicator
+        android:layout_height="40dp"
+        android:indeterminate="true"
+        app:trackThickness="5dp"
+        android:layout_width="40dp"
+        android:id="@+id/prograssbar"
+        />
+
+    <TextView
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:ellipsize="end"
+        android:lines="1"
+        android:singleLine="true"
+        android:layout_marginStart="4dp"
+        android:layout_weight="1"
+        android:text="Loading...."
+        android:id="@+id/tv_prograssBar"
+        />
+
+</LinearLayout>

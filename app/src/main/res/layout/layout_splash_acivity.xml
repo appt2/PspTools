@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+     xmlns:android="http://schemas.android.com/apk/res/android"
+     xmlns:app="http://schemas.android.com/apk/res-auto"
+     android:layout_height="match_parent"
+     android:layout_width="match_parent"
+     android:gravity="center"
+     android:orientation="vertical">
+
+    <ImageView
+         android:layout_height="120dp"
+         android:layout_width="120dp"
+         android:scaleType="centerCrop"
+         android:src="@mipmap/ic_launcher_foreground" />
+
+    <TextView
+         android:layout_height="wrap_content"
+         android:layout_width="wrap_content"
+         android:textSize="20sp"
+         android:textColor="#ffffffff"
+         android:layout_marginTop="9dp"
+         android:text="Psp tools " />
+
+    <TextView
+         android:layout_height="wrap_content"
+         android:layout_width="wrap_content"
+         android:textColor="#ffffffff"
+         android:layout_marginTop="5dp"
+         android:text="App by ninja coder " />
+
+</LinearLayout>
