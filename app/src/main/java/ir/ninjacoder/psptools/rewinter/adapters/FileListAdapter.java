@@ -2,6 +2,8 @@ package ir.ninjacoder.psptools.rewinter.adapters;
 
 import android.view.LayoutInflater;
 import android.view.View;
+import com.blankj.utilcode.util.FileUtils;
+import com.blankj.utilcode.util.ThreadUtils;
 import com.bluewhaleyt.materialfileicon.core.FileIconHelper;
 import com.bumptech.glide.Glide;
 import ir.ninjacoder.psptools.rewinter.R;
@@ -12,6 +14,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import ir.ninjacoder.psptools.rewinter.databinding.FilelistBinding;
 import ir.ninjacoder.psptools.rewinter.interfaces.OnItemClick;
 import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.stream.Collectors;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -48,6 +54,30 @@ public class FileListAdapter extends RecyclerView.Adapter<FileListAdapter.Holder
           .into(holder.icon);
     }
     holder.name.setText(files.getName());
+    if (!files.isDirectory()) {
+      setHolder(holder.sub, files);
+    } else
+      ThreadUtils.executeByIo(
+          new ThreadUtils.Task<String>() {
+
+            @Override
+            public String doInBackground() throws Throwable {
+              return getDirTotal(files);
+            }
+
+            @Override
+            public void onFail(Throwable tr) {
+              holder.sub.setText(tr.getLocalizedMessage());
+            }
+
+            @Override
+            public void onSuccess(String str) {
+              holder.sub.setText(str);
+            }
+
+            @Override
+            public void onCancel() {}
+          });
     holder.itemView.setOnClickListener(x -> click.onClick(files, holder.getAdapterPosition(), x));
   }
 
@@ -72,5 +102,62 @@ public class FileListAdapter extends RecyclerView.Adapter<FileListAdapter.Holder
   public boolean getEnd(File fo) {
     var name = fo.getName();
     return name.endsWith(".jpg".toLowerCase()) || name.endsWith(".png".toLowerCase());
+  }
+
+  public String getDirTotal(File paths) {
+
+    try {
+      File directory = paths;
+
+      List<File> fileList =
+          Files.list(directory.toPath()).map(Path::toFile).collect(Collectors.toList());
+
+      if (fileList.isEmpty()) {
+        return "Folder : 0 Files: 0";
+      } else {
+        long folderCount = fileList.stream().filter(File::isDirectory).count();
+
+        long fileCount = fileList.stream().filter(File::isFile).count();
+
+        return "Folder : " + folderCount + " File : " + fileCount;
+      }
+    } catch (IOException e) {
+      return e.getLocalizedMessage();
+    }
+  }
+
+  protected String getSize(File files) {
+    return "Size "
+        + FileUtils.getSize(files)
+        + "| "
+        + "Modified"
+        + String.valueOf(FileUtils.getFileLastModified(files));
+  }
+
+  public void setHolder(TextView view, File file) {
+    ThreadUtils.executeByIo(
+        new ThreadUtils.Task<String>() {
+
+          @Override
+          public String doInBackground() throws Throwable {
+            return getSize(file);
+          }
+
+          @Override
+          public void onSuccess(String str) {
+            if (view != null) {
+              view.setText(str);
+            }
+          }
+
+          @Override
+          public void onCancel() {}
+
+          @Override
+          public void onFail(Throwable ss) {
+
+            ThreadUtils.runOnUiThread(() -> view.setText(ss.getLocalizedMessage()));
+          }
+        });
   }
 }

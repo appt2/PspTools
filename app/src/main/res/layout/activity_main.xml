@@ -37,12 +37,19 @@
         <com.google.android.material.progressindicator.LinearProgressIndicator
              android:layout_height="wrap_content"
              android:layout_width="wrap_content"
-              android:id="@+id/prograssBar"
-             android:indeterminate="true" />
+             android:indeterminate="true"
+             android:id="@+id/prograssBar" />
 
         <androidx.recyclerview.widget.RecyclerView
              android:layout_height="wrap_content"
              android:layout_width="match_parent"
+             android:padding="5dp"
+             android:id="@+id/bar_layout" />
+
+        <androidx.recyclerview.widget.RecyclerView
+             android:layout_height="wrap_content"
+             android:layout_width="match_parent"
+             android:padding="3dp"
              android:id="@+id/rv" />
 
         <LinearLayout

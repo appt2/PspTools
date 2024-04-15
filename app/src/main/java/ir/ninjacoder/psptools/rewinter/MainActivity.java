@@ -1,23 +1,20 @@
 package ir.ninjacoder.psptools.rewinter;
 
-import android.Manifest;
 import android.net.Uri;
 import android.content.Intent;
-import com.blankj.utilcode.util.FileUtils;
+import android.os.Build;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import ir.ninjacoder.psptools.rewinter.adapters.ToolBarItemFileList;
+import ir.ninjacoder.psptools.rewinter.interfaces.OnTreeViewClick;
 import ir.ninjacoder.psptools.rewinter.utils.FileSortByName;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
-import java.util.Locale;
 import org.ppsspp.ppsspp.PpssppActivity;
 import android.util.Log;
 import android.view.View;
 import androidx.activity.OnBackPressedCallback;
-import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
-import androidx.core.content.ContextCompat;
-import android.content.pm.PackageManager;
-import androidx.core.app.ActivityCompat;
 import androidx.recyclerview.widget.GridLayoutManager;
 import com.google.android.material.color.MaterialColors;
 import ir.ninjacoder.psptools.rewinter.adapters.FileListAdapter;
@@ -26,7 +23,6 @@ import ir.ninjacoder.psptools.rewinter.dialogs.DialogMakeFile;
 import ir.ninjacoder.psptools.rewinter.interfaces.OnItemClick;
 import ir.ninjacoder.psptools.rewinter.utils.BaseCompat;
 import ir.ninjacoder.psptools.rewinter.utils.FileUtil;
-import ir.ninjacoder.psptools.rewinter.utils.PrograssDialog;
 import java.io.File;
 import java.util.Arrays;
 import java.util.List;
@@ -51,7 +47,6 @@ public class MainActivity extends BaseCompat implements OnItemClick {
     binding.toolbar.setTitleTextColor(
         MaterialColors.getColor(
             binding.toolbar, com.google.android.material.R.attr.colorPrimary, 0));
-    fileListPr();
     path = FileUtil.getExternalStorageDir();
     reloadFile(path);
     onBack();
@@ -109,21 +104,28 @@ public class MainActivity extends BaseCompat implements OnItemClick {
                   });
             })
         .start();
+    List<String> ma = spiltIntoBreadcrumbItems(path);
+    binding.barLayout.setLayoutManager(
+        new LinearLayoutManager(this, RecyclerView.HORIZONTAL, false));
+    binding.barLayout.setAdapter(
+        new ToolBarItemFileList(
+            ma,
+            new OnTreeViewClick() {
+
+              @Override
+              public void onTree(File file, int pos) {
+                if (file != null && !file.getAbsolutePath().equals(path)) {
+                  reloadFile(file.getParent());
+                } else {
+                  finishAffinity();
+                }
+                
+              }
+            }));
+    binding.barLayout.smoothScrollToPosition(ma.size());
   }
 
-  void fileListPr() {
-    if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)
-            == PackageManager.PERMISSION_DENIED
-        || ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
-            == PackageManager.PERMISSION_DENIED) {
-      ActivityCompat.requestPermissions(
-          this,
-          new String[] {
-            Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE
-          },
-          1000);
-    }
-  }
+  
 
   @Override
   public void onClick(File file, int pos, View view) {
@@ -162,5 +164,26 @@ public class MainActivity extends BaseCompat implements OnItemClick {
 
   void showPrograss(boolean show) {
     binding.prograssBar.setVisibility(show ? VISIBLE : GONE);
+  }
+
+  public List<String> spiltIntoBreadcrumbItems(String filePath) {
+    String separator = "/";
+    String[] items = filePath.split(separator);
+    List<String> filteredItems = new ArrayList<>();
+    for (String item : items) {
+      if (!item.trim().isEmpty()) {
+        filteredItems.add(item);
+      }
+    }
+    if (filteredItems.size() >= 3
+        && filteredItems.get(0).equals("storage")
+        && filteredItems.get(1).equals("emulated")
+        && filteredItems.get(2).equals("0")) {
+      List<String> combinedItems = new ArrayList<>();
+      combinedItems.add(Build.MANUFACTURER + " " + Build.MODEL);
+      combinedItems.addAll(filteredItems.subList(3, filteredItems.size()));
+      return combinedItems;
+    }
+    return filteredItems;
   }
 }
