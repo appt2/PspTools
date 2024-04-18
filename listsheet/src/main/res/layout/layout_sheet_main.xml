@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_height="wrap_content"
+    android:layout_width="match_parent"
+    android:orientation="vertical"
+    >
+
+    <LinearLayout
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:paddingVertical="2dp"
+        android:orientation="vertical"
+        android:paddingHorizontal="2dp"
+        >
+
+        <LinearLayout
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:gravity="center_horizontal|center_vertical"
+            android:orientation="vertical"
+            >
+
+            <TextView
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:gravity="center_horizontal|center_horizontal"
+                android:padding="8dp"
+                android:textSize="18sp"
+                android:textColor="#ffffff"
+                android:focusable="false"
+                android:id="@+id/title"
+                android:text="Sheet Helper"
+                />
+
+            <com.google.android.material.divider.MaterialDivider
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:paddingVertical="2dp"
+                android:id="@+id/diver"
+                />
+
+        </LinearLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:padding="8dp"
+            android:id="@+id/listdata"
+            />
+
+    </LinearLayout>
+
+</LinearLayout>

@@ -1,13 +1,18 @@
 package ir.ninjacoder.psptools.rewinter;
 
+import android.graphics.Color;
 import android.net.Uri;
 import android.content.Intent;
 import android.os.Build;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import com.ninjacoder.listshset.library.interfaces.OnItemClickEvent;
+import com.ninjacoder.listshset.library.widget.ItemRuner;
 import ir.ninjacoder.psptools.rewinter.adapters.ToolBarItemFileList;
+import ir.ninjacoder.psptools.rewinter.dialogs.ExitUtils;
 import ir.ninjacoder.psptools.rewinter.interfaces.OnTreeViewClick;
 import ir.ninjacoder.psptools.rewinter.utils.FileSortByName;
+import ir.ninjacoder.psptools.rewinter.utils.MatetialColorUtils;
 import java.util.ArrayList;
 import java.util.Collections;
 import org.ppsspp.ppsspp.PpssppActivity;
@@ -43,7 +48,8 @@ public class MainActivity extends BaseCompat implements OnItemClick {
     binding = ActivityMainBinding.inflate(getLayoutInflater());
     setContentView(binding.getRoot());
     setSupportActionBar(binding.toolbar);
-    setTitle("Pt");
+    setTitle("PT");
+
     binding.toolbar.setTitleTextColor(
         MaterialColors.getColor(
             binding.toolbar, com.google.android.material.R.attr.colorPrimary, 0));
@@ -54,13 +60,52 @@ public class MainActivity extends BaseCompat implements OnItemClick {
 
     binding.fb.setOnClickListener(
         x -> {
-          var dialog =
-              new DialogMakeFile(
-                  this,
-                  file.getAbsolutePath(),
-                  () -> {
-                    reloadFile(file.getAbsolutePath());
-                  });
+          ItemRuner runer = new ItemRuner(this);
+          runer.addItem("Create a folder", R.drawable.ic_material_folders);
+
+          runer.setCallBack(
+              new OnItemClickEvent() {
+
+                @Override
+                public void onClickItem(int pos) {
+                  switch (pos) {
+                    case 0:
+                      {
+                        var dialog =
+                            new DialogMakeFile(
+                                MainActivity.this,
+                                file.getAbsolutePath(),
+                                () -> {
+                                  reloadFile(file.getAbsolutePath());
+                                });
+                        runer.setDismiss();
+                        break;
+                      }
+                  }
+                }
+
+                @Override
+                public void onLongItem(int pos) {}
+              });
+          runer.setTextColors(
+              MaterialColors.getColor(
+                  MainActivity.this, MatetialColorUtils.getColorPrimary, 0));
+          runer.setColorFilter(
+              MaterialColors.getColor(
+                  MainActivity.this, MatetialColorUtils.getColorPrimary, 0));
+          runer.serDivarColor(
+              MaterialColors.getColor(
+                  MainActivity.this, MatetialColorUtils.getColorPrimary, 0));
+          runer.setTitleColor(
+              MaterialColors.getColor(
+                  MainActivity.this, MatetialColorUtils.getColorPrimary, 0));
+          runer.setTitle("Psp tools");
+          runer.setAnimator(true);
+          //  runer.setSheetBackground(Color.BLACK);
+          runer.setLayoutChange(false);
+          runer.setSubShow(false);
+          runer.setShowIcon(true);
+          runer.show();
         });
   }
 
@@ -80,13 +125,14 @@ public class MainActivity extends BaseCompat implements OnItemClick {
                 if (file != null && !file.getAbsolutePath().equals(path)) {
                   reloadFile(file.getParent());
                 } else {
-                  finishAffinity();
+                  ExitUtils u = new ExitUtils(MainActivity.this);
                 }
               }
             });
   }
 
   void reloadFile(String path) {
+
     showPrograss(true);
     new Thread(
             () -> {
@@ -119,13 +165,10 @@ public class MainActivity extends BaseCompat implements OnItemClick {
                 } else {
                   finishAffinity();
                 }
-                
               }
             }));
     binding.barLayout.smoothScrollToPosition(ma.size());
   }
-
-  
 
   @Override
   public void onClick(File file, int pos, View view) {
@@ -133,7 +176,7 @@ public class MainActivity extends BaseCompat implements OnItemClick {
     if (file != null) {
       if (file.isDirectory()) {
         reloadFile(file.getAbsolutePath());
-      } else if (file.getName().endsWith(".iso")) {
+      } else if (file.getName().endsWith(".iso") || file.getName().endsWith(".cso")) {
         Uri uri = Uri.fromFile(file);
         respondToShortcutRequest(uri);
       }

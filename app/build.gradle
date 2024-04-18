@@ -63,4 +63,5 @@ dependencies {
     //other libs 
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation project(path: ':materialfileicon')
+    implementation project(path: ':listsheet')
 }

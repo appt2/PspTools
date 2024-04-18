@@ -1,5 +1,7 @@
 package ir.ninjacoder.psptools.rewinter.adapters;
 
+import android.animation.ValueAnimator;
+import androidx.interpolator.view.animation.FastOutSlowInInterpolator;
 import android.view.LayoutInflater;
 import android.view.View;
 import com.blankj.utilcode.util.FileUtils;
@@ -46,6 +48,19 @@ public class FileListAdapter extends RecyclerView.Adapter<FileListAdapter.Holder
     helper.setDynamicFolderEnabled(true);
     helper.setEnvironmentEnabled(true);
     holder.icon.setImageResource(helper.getFileIcon());
+    float startScale = 1.15f;
+    float endScale = 1f;
+    int animationDuration = 300;
+    ValueAnimator animator = ValueAnimator.ofFloat(startScale, endScale);
+    animator.setDuration(animationDuration);
+    animator.setInterpolator(new FastOutSlowInInterpolator());
+    animator.addUpdateListener(
+        animation -> {
+          float value = (float) animation.getAnimatedValue();
+          holder.itemView.setScaleY(value);
+          holder.itemView.setScaleX(value);
+        });
+    animator.start();
 
     if (getEnd(files)) {
       Glide.with(holder.icon.getContext())
