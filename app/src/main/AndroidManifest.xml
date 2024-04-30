@@ -32,5 +32,6 @@
             android:theme="@style/psp"
             
         />
+        <activity android:name="SettingsAcivity" />
     </application>
 </manifest>

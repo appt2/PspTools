@@ -67,7 +67,7 @@ public class SimpleFileChooser {
 
 	// Comparator for Arrays.sort(). Separate folders from files, order
 	// alphabetically, ignore case.
-	private Comparator<File> fileArrayComparator = new Comparator<File>() {
+	public Comparator<File> fileArrayComparator = new Comparator<File>() {
 		public int compare(File file1, File file2) {
 			if (file1 == null || file2 == null) // if either null, assume equal
 				return 0;

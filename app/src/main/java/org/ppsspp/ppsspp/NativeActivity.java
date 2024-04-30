@@ -1379,10 +1379,9 @@ public abstract class NativeActivity extends BaseCompat {
                   public void onClick(DialogInterface d, int which) {
                     Log.i(TAG, "input box successful");
                     NativeApp.sendRequestResult(requestId, true, input.getText().toString(), 0);
-                    d
-                        .dismiss(); // It's OK that this will cause an extra dismiss message. It'll
-                                    // be ignored since the request number has already been
-                                    // processed.
+                    d.dismiss(); // It's OK that this will cause an extra dismiss message. It'll
+                    // be ignored since the request number has already been
+                    // processed.
                   }
                 })
             .setNegativeButton(

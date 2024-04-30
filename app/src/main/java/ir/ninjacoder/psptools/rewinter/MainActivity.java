@@ -4,6 +4,10 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.content.Intent;
 import android.os.Build;
+import android.view.ViewPropertyAnimator;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.ninjacoder.listshset.library.interfaces.OnItemClickEvent;
@@ -13,6 +17,7 @@ import ir.ninjacoder.psptools.rewinter.dialogs.ExitUtils;
 import ir.ninjacoder.psptools.rewinter.interfaces.OnTreeViewClick;
 import ir.ninjacoder.psptools.rewinter.utils.FileSortByName;
 import ir.ninjacoder.psptools.rewinter.utils.MatetialColorUtils;
+import ir.ninjacoder.psptools.rewinter.utils.ZoomItemAnimator;
 import java.util.ArrayList;
 import java.util.Collections;
 import org.ppsspp.ppsspp.PpssppActivity;
@@ -41,6 +46,7 @@ public class MainActivity extends BaseCompat implements OnItemClick {
   private File file;
   protected List<File> fileList;
   protected String path = "";
+  protected ItemTouchHelper.SimpleCallback simpleItemTouchCallback;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -57,11 +63,13 @@ public class MainActivity extends BaseCompat implements OnItemClick {
     reloadFile(path);
     onBack();
     listCh();
+    tests();
 
     binding.fb.setOnClickListener(
         x -> {
           ItemRuner runer = new ItemRuner(this);
           runer.addItem("Create a folder", R.drawable.ic_material_folders);
+          runer.addItem("Settings");
 
           runer.setCallBack(
               new OnItemClickEvent() {
@@ -81,6 +89,13 @@ public class MainActivity extends BaseCompat implements OnItemClick {
                         runer.setDismiss();
                         break;
                       }
+                    case 1:
+                      {
+                        Intent i = new Intent(getApplicationContext(), SettingsAcivity.class);
+                        startActivity(i);
+                        runer.setDismiss();
+                        break;
+                      }
                   }
                 }
 
@@ -88,17 +103,13 @@ public class MainActivity extends BaseCompat implements OnItemClick {
                 public void onLongItem(int pos) {}
               });
           runer.setTextColors(
-              MaterialColors.getColor(
-                  MainActivity.this, MatetialColorUtils.getColorPrimary, 0));
+              MaterialColors.getColor(MainActivity.this, MatetialColorUtils.getColorPrimary, 0));
           runer.setColorFilter(
-              MaterialColors.getColor(
-                  MainActivity.this, MatetialColorUtils.getColorPrimary, 0));
+              MaterialColors.getColor(MainActivity.this, MatetialColorUtils.getColorPrimary, 0));
           runer.serDivarColor(
-              MaterialColors.getColor(
-                  MainActivity.this, MatetialColorUtils.getColorPrimary, 0));
+              MaterialColors.getColor(MainActivity.this, MatetialColorUtils.getColorPrimary, 0));
           runer.setTitleColor(
-              MaterialColors.getColor(
-                  MainActivity.this, MatetialColorUtils.getColorPrimary, 0));
+              MaterialColors.getColor(MainActivity.this, MatetialColorUtils.getColorPrimary, 0));
           runer.setTitle("Psp tools");
           runer.setAnimator(true);
           //  runer.setSheetBackground(Color.BLACK);
@@ -146,6 +157,8 @@ public class MainActivity extends BaseCompat implements OnItemClick {
                   () -> {
                     binding.rv.setAdapter(filelist);
                     binding.rv.setLayoutManager(manger);
+                    var itemAnimator = new ZoomItemAnimator();
+                    itemAnimator.setup(binding.rv);
                     showPrograss(false);
                   });
             })
@@ -228,5 +241,54 @@ public class MainActivity extends BaseCompat implements OnItemClick {
       return combinedItems;
     }
     return filteredItems;
+  }
+
+  void tests() {
+    simpleItemTouchCallback =
+        new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
+          @Override
+          public boolean onMove(
+              RecyclerView recyclerView,
+              RecyclerView.ViewHolder viewHolder,
+              RecyclerView.ViewHolder target) {
+            return false;
+          }
+
+          @Override
+          public void onSwiped(RecyclerView.ViewHolder viewHolder, int swipeDir) {
+            int position = viewHolder.getAdapterPosition();
+            ViewPropertyAnimator animator = viewHolder.itemView.animate();
+            animator.translationYBy(1000).setDuration(1000).start();
+            filelist.removeItemWithAnimation(position,file);
+          }
+
+          @Override
+          public void onSelectedChanged(
+              @Nullable RecyclerView.ViewHolder viewHolder, int actionState) {
+            super.onSelectedChanged(viewHolder, actionState);
+
+            if (actionState == ItemTouchHelper.ACTION_STATE_SWIPE) {
+              viewHolder
+                  .itemView
+                  .animate()
+                  .alpha(0)
+                  .setDuration(1000)
+                  .withEndAction(
+                      () -> {
+                        viewHolder.itemView.animate().alpha(1).setDuration(1000).start();
+                      })
+                  .start();
+            }
+          }
+
+          @Override
+          public void clearView(
+              @NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder) {
+            super.clearView(recyclerView, viewHolder);
+          }
+        };
+
+    ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleItemTouchCallback);
+    itemTouchHelper.attachToRecyclerView(binding.rv);
   }
 }

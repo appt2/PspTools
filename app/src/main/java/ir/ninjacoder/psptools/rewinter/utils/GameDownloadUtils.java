@@ -10,45 +10,28 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GameDownloadUtils implements DownloadListener {
-  private Context context;
+public class GameDownloadUtils {
   private ListGameModel model;
   protected DownloadInfo downloadInfo;
-  protected
-  /** for adpter game */
-  List<ListGameModel> listGame = new ArrayList<>();
 
-  public GameDownloadUtils(Context context) {
-    this.context = context;
+  public void setRun() {
+    try {
+      File file = model.getGamePath();
+      downloadInfo =
+          new DownloadInfo.Builder()
+              .setUrl(model.getName())
+              .setPath(file.getAbsolutePath())
+              .build();
+    } catch (Exception d) {
+      throw new RuntimeException("You not call #setDownloadCallBack");
+    }
   }
 
-  public void setUrlGame(String uri) {
-    File file = model.getGamePath();
-    downloadInfo = new DownloadInfo.Builder().setUrl(uri).setPath(file.getAbsolutePath()).build();
-    downloadInfo.setDownloadListener(this);
-    
+  public void setDownloadCallBack(DownloadListener dow) {
+    try {
+      downloadInfo.setDownloadListener(dow);
+    } catch (Exception err) {
+      throw new RuntimeException("You not call setRun");
+    }
   }
-
-  @Override
-  public void onStart() {}
-
-  @Override
-  public void onWaited() {}
-
-  @Override
-  public void onPaused() {}
-
-  @Override
-  public void onDownloading(long progress, long size) {
-    model.setSize(String.valueOf(progress) + " " + String.valueOf(size));
-  }
-
-  @Override
-  public void onRemoved() {}
-
-  @Override
-  public void onDownloadSuccess() {}
-
-  @Override
-  public void onDownloadFailed(DownloadException e) {}
 }

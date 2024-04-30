@@ -1,6 +1,7 @@
 package ir.ninjacoder.psptools.rewinter.adapters;
 
 import android.animation.ValueAnimator;
+import android.graphics.Color;
 import androidx.interpolator.view.animation.FastOutSlowInInterpolator;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,6 +16,7 @@ import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
 import ir.ninjacoder.psptools.rewinter.databinding.FilelistBinding;
 import ir.ninjacoder.psptools.rewinter.interfaces.OnItemClick;
+import ir.ninjacoder.psptools.rewinter.utils.IsoFileFinder;
 import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -99,6 +101,10 @@ public class FileListAdapter extends RecyclerView.Adapter<FileListAdapter.Holder
   @Override
   public int getItemCount() {
     return listFile.size();
+  }
+
+  public void removeItemWithAnimation(int pos, File file) {
+     notifyItemRemoved(pos);
   }
 
   class Holder extends RecyclerView.ViewHolder {

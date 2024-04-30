@@ -4,11 +4,12 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.view.View;
 
+import android.widget.Button;
 import androidx.appcompat.app.AlertDialog;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
-public class DialogUtil {
+public class DialogUtil<T> {
 
   private MaterialAlertDialogBuilder dialog;
 
@@ -99,6 +100,25 @@ public class DialogUtil {
 
   public void cancel() {
     getAlertDialog().cancel();
+  }
+
+  public Button getButton(int btn) {
+    return getAlertDialog().getButton(btn);
+  }
+
+  public <V extends View> V findViewByIdForV(int id) {
+    AlertDialog alertDialog = getAlertDialog();
+    if (alertDialog != null) {
+      View view = alertDialog.findViewById(id);
+      if (view != null) {
+        return (V) view;
+      }
+    }
+    return null;
+  }
+
+  public View findViewById(int id) {
+    return getAlertDialog().findViewById(id);
   }
 
   public MaterialAlertDialogBuilder getDialog(Context context) {

@@ -1,12 +1,9 @@
 package org.ppsspp.ppsspp;
 
 import android.annotation.TargetApi;
-import android.app.Activity;
 import android.content.pm.ActivityInfo;
 import android.graphics.Point;
 import android.os.Build;
-import android.os.Handler;
-import android.os.Looper;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Display;
@@ -15,7 +12,6 @@ import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
 import android.view.WindowInsets;
-import java.lang.Runnable;
 
 public class SizeManager implements SurfaceHolder.Callback {
 	private static String TAG = "PPSSPPSizeManager";

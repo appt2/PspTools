@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Looper;
 import android.util.Log;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import java.io.File;
 import ir.ninjacoder.psptools.rewinter.R;
 import java.nio.charset.StandardCharsets;
@@ -121,18 +122,6 @@ public class ShortcutActivity extends Activity {
 
     String[] pathSegments = pathStr.split("/");
     name = pathSegments[pathSegments.length - 1];
-
-    /*
-    // No longer working for various reasons.
-
-    PpssppActivity.CheckABIAndLoadLibrary();
-    String name = queryGameName(path);
-    if (name.equals("")) {
-    	Log.i(TAG, "Failed to retrieve game name - ignoring.");
-    	showBadGameMessage();
-    	return;
-    }*/
-
     Log.i(TAG, "Game name: " + name + " : Creating shortcut to " + uri.toString());
 
     // This is Intent that will be returned by this method, as response to
@@ -155,7 +144,7 @@ public class ShortcutActivity extends Activity {
       @Override
       public void run() {
         Looper.prepare();
-        AlertDialog.Builder builder = new AlertDialog.Builder(ShortcutActivity.this);
+        MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(ShortcutActivity.this);
         builder.setMessage(getResources().getString(R.string.bad_disc_message));
         builder.setTitle(getResources().getString(R.string.bad_disc_title));
         builder.create().show();
