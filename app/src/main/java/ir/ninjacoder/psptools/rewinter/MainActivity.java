@@ -64,7 +64,8 @@ public class MainActivity extends BaseCompat implements OnItemClick {
     onBack();
     listCh();
     tests();
-
+    
+    
     binding.fb.setOnClickListener(
         x -> {
           ItemRuner runer = new ItemRuner(this);
@@ -155,10 +156,10 @@ public class MainActivity extends BaseCompat implements OnItemClick {
               manger = new GridLayoutManager(this, 2);
               runOnUiThread(
                   () -> {
-                    binding.rv.setAdapter(filelist);
-                    binding.rv.setLayoutManager(manger);
                     var itemAnimator = new ZoomItemAnimator();
                     itemAnimator.setup(binding.rv);
+                    binding.rv.setAdapter(filelist);
+                    binding.rv.setLayoutManager(manger);
                     showPrograss(false);
                   });
             })
@@ -172,12 +173,8 @@ public class MainActivity extends BaseCompat implements OnItemClick {
             new OnTreeViewClick() {
 
               @Override
-              public void onTree(File file, int pos) {
-                if (file != null && !file.getAbsolutePath().equals(path)) {
-                  reloadFile(file.getParent());
-                } else {
-                  finishAffinity();
-                }
+              public void onTree(File files, int pos) {
+                onBack();
               }
             }));
     binding.barLayout.smoothScrollToPosition(ma.size());
@@ -259,7 +256,7 @@ public class MainActivity extends BaseCompat implements OnItemClick {
             int position = viewHolder.getAdapterPosition();
             ViewPropertyAnimator animator = viewHolder.itemView.animate();
             animator.translationYBy(1000).setDuration(1000).start();
-            filelist.removeItemWithAnimation(position,file);
+            filelist.removeItemWithAnimation(position, file);
           }
 
           @Override

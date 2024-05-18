@@ -38,12 +38,21 @@ public class ToolBarItemFileList extends RecyclerView.Adapter<ToolBarItemFileLis
 
     holder.name.setText(files.getName());
     holder.name.setAlpha(files.isHidden() ? 0.5f : 1f);
-    
+
     if (pos == 0) {
       holder.icon.setVisibility(View.VISIBLE);
       holder.name.setTextColor(Color.BLUE);
     }
-    
+    if (click instanceof OnTreeViewClick) {
+      holder.itemView.setOnClickListener(
+          new View.OnClickListener() {
+
+            @Override
+            public void onClick(View arg0) {
+              click.onTree(files,holder.getAdapterPosition());
+            }
+          });
+    }
   }
 
   @Override

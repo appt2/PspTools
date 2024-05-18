@@ -19,7 +19,6 @@ public class IsoFileFinder {
               }
             } else {
               if (file.getName().endsWith(".iso")) {
-                Log.d("JarFileFinder", "🎉 Found a .jar file: " + file.getAbsolutePath());
                 jarFileFound = true;
               }
             }

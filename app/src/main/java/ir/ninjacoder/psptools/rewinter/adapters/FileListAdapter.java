@@ -1,14 +1,15 @@
 package ir.ninjacoder.psptools.rewinter.adapters;
 
 import android.animation.ValueAnimator;
-import android.graphics.Color;
+import android.widget.Toast;
 import androidx.interpolator.view.animation.FastOutSlowInInterpolator;
 import android.view.LayoutInflater;
-import android.view.View;
+import com.blankj.utilcode.util.ClipboardUtils;
 import com.blankj.utilcode.util.FileUtils;
 import com.blankj.utilcode.util.ThreadUtils;
 import com.bluewhaleyt.materialfileicon.core.FileIconHelper;
 import com.bumptech.glide.Glide;
+import ir.ninjacoder.psptools.rewinter.App;
 import ir.ninjacoder.psptools.rewinter.R;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -16,13 +17,11 @@ import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
 import ir.ninjacoder.psptools.rewinter.databinding.FilelistBinding;
 import ir.ninjacoder.psptools.rewinter.interfaces.OnItemClick;
-import ir.ninjacoder.psptools.rewinter.utils.IsoFileFinder;
 import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.stream.Collectors;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 public class FileListAdapter extends RecyclerView.Adapter<FileListAdapter.Holder> {
@@ -70,6 +69,10 @@ public class FileListAdapter extends RecyclerView.Adapter<FileListAdapter.Holder
           .placeholder(R.drawable.ic_launcher_foreground)
           .into(holder.icon);
     }
+    holder.itemView.setOnLongClickListener(v ->{
+       copyFileNamesToClipboard(listFile);
+        return false;
+    });
     holder.name.setText(files.getName());
     if (!files.isDirectory()) {
       setHolder(holder.sub, files);
@@ -104,7 +107,7 @@ public class FileListAdapter extends RecyclerView.Adapter<FileListAdapter.Holder
   }
 
   public void removeItemWithAnimation(int pos, File file) {
-     notifyItemRemoved(pos);
+    notifyItemRemoved(pos);
   }
 
   class Holder extends RecyclerView.ViewHolder {
@@ -180,5 +183,18 @@ public class FileListAdapter extends RecyclerView.Adapter<FileListAdapter.Holder
             ThreadUtils.runOnUiThread(() -> view.setText(ss.getLocalizedMessage()));
           }
         });
+  }
+
+  private void copyFileNamesToClipboardFromPsp(List<File> listFile) {
+    StringBuilder fileNamesBuilder = new StringBuilder();
+    for (File file : listFile) {
+      if (file.isDirectory()) {
+        continue;
+      }
+      fileNamesBuilder.append(file.getName()).append("\n");
+    }
+    String fileNames = fileNamesBuilder.toString();
+    ClipboardUtils.copyText(fileNames + " = " + fileNames );
+    Toast.makeText(App.getContext(),"All File copyed using from Texturs.ini!",2).show();
   }
 }
