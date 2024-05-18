@@ -69,10 +69,11 @@ public class FileListAdapter extends RecyclerView.Adapter<FileListAdapter.Holder
           .placeholder(R.drawable.ic_launcher_foreground)
           .into(holder.icon);
     }
-    holder.itemView.setOnLongClickListener(v ->{
-       copyFileNamesToClipboard(listFile);
-        return false;
-    });
+    holder.itemView.setOnLongClickListener(
+        v -> {
+          copyFileNamesToClipboardFromPsp(listFile);
+          return false;
+        });
     holder.name.setText(files.getName());
     if (!files.isDirectory()) {
       setHolder(holder.sub, files);
@@ -191,10 +192,9 @@ public class FileListAdapter extends RecyclerView.Adapter<FileListAdapter.Holder
       if (file.isDirectory()) {
         continue;
       }
-      fileNamesBuilder.append(file.getName()).append("\n");
+      fileNamesBuilder.append(file.getName()).append(" = ").append(file.getName()).append("\n");
     }
     String fileNames = fileNamesBuilder.toString();
-    ClipboardUtils.copyText(fileNames + " = " + fileNames );
-    Toast.makeText(App.getContext(),"All File copyed using from Texturs.ini!",2).show();
+    ClipboardUtils.copyText(fileNames);
   }
 }
