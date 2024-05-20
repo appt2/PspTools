@@ -152,7 +152,7 @@ public class MainActivity extends BaseCompat implements OnItemClick {
               File[] files = file.listFiles();
               fileList = new ArrayList<>(Arrays.asList(files));
               Collections.sort(fileList, FileSortByName.sortNameAsc());
-              filelist = new FileListAdapter(fileList, this);
+              filelist = new FileListAdapter(fileList, this,MainActivity.this);
               manger = new GridLayoutManager(this, 2);
               runOnUiThread(
                   () -> {

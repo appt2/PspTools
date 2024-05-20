@@ -1,7 +1,8 @@
 package ir.ninjacoder.psptools.rewinter.adapters;
 
 import android.animation.ValueAnimator;
-import android.widget.Toast;
+import android.content.Context;
+import android.view.View;
 import androidx.interpolator.view.animation.FastOutSlowInInterpolator;
 import android.view.LayoutInflater;
 import com.blankj.utilcode.util.ClipboardUtils;
@@ -9,7 +10,6 @@ import com.blankj.utilcode.util.FileUtils;
 import com.blankj.utilcode.util.ThreadUtils;
 import com.bluewhaleyt.materialfileicon.core.FileIconHelper;
 import com.bumptech.glide.Glide;
-import ir.ninjacoder.psptools.rewinter.App;
 import ir.ninjacoder.psptools.rewinter.R;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -20,6 +20,8 @@ import ir.ninjacoder.psptools.rewinter.interfaces.OnItemClick;
 import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.Arrays;
 import java.util.stream.Collectors;
 import java.io.IOException;
 import java.util.List;
@@ -28,10 +30,12 @@ public class FileListAdapter extends RecyclerView.Adapter<FileListAdapter.Holder
   private List<File> listFile;
   protected FilelistBinding bi;
   protected OnItemClick click;
+  protected Context context;
 
-  public FileListAdapter(List<File> listFile, OnItemClick click) {
+  public FileListAdapter(List<File> listFile, OnItemClick click, Context context) {
     this.listFile = listFile;
     this.click = click;
+    this.context = context;
   }
 
   @Override
@@ -100,6 +104,21 @@ public class FileListAdapter extends RecyclerView.Adapter<FileListAdapter.Holder
             public void onCancel() {}
           });
     holder.itemView.setOnClickListener(x -> click.onClick(files, holder.getAdapterPosition(), x));
+    if (getEmptyFolder(files)) {
+      holder.icon.setImageResource(R.drawable.ic_material_documents);
+    }
+    Path path = Paths.get(files.getName());
+    try {
+    	if (Files.isHidden(path)) {
+      holder.itemView.setVisibility(View.INVISIBLE);
+    } else holder.itemView.setVisibility(View.VISIBLE);
+    } catch(IOException err) {
+    	err.printStackTrace();
+    }
+  }
+
+  public boolean getEmptyFolder(File file) {
+    return file.isDirectory() && file.listFiles().length == 0;
   }
 
   @Override
@@ -109,6 +128,13 @@ public class FileListAdapter extends RecyclerView.Adapter<FileListAdapter.Holder
 
   public void removeItemWithAnimation(int pos, File file) {
     notifyItemRemoved(pos);
+  }
+
+  public List<File> getNonHiddenFiles(File directory) {
+     
+    return Arrays.stream(directory.listFiles())
+        .filter(file -> !file.isHidden())
+        .collect(Collectors.toList());
   }
 
   class Holder extends RecyclerView.ViewHolder {
@@ -197,4 +223,6 @@ public class FileListAdapter extends RecyclerView.Adapter<FileListAdapter.Holder
     String fileNames = fileNamesBuilder.toString();
     ClipboardUtils.copyText(fileNames);
   }
+
+  
 }
